@@ -16,6 +16,9 @@ network:
 safe-outputs:
   create-pull-request:
     max: 1
+    draft: true
+    labels: [continuous-improvement]
+    title-prefix: "[Continuous Improvement] "
   noop:
 ---
 
