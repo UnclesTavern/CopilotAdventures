@@ -23,7 +23,7 @@
 #
 # Nightly workflow to continuously improve the repository with minimal changes - adding tests or refactoring code one function at a time
 #
-# gh-aw-metadata: {"schema_version":"v1","frontmatter_hash":"a803b965bb3e1752f1f5ee56081912aadb638d08b0b0f8cb381b1f4326067244","compiler_version":"v0.49.3"}
+# gh-aw-metadata: {"schema_version":"v1","frontmatter_hash":"86e42ce6753403e37f477873f0120e8c0fce4636f67ed92b9ea45557450be3b2","compiler_version":"v0.49.3"}
 
 name: "Continuous Repository Improvement Agent"
 "on":
@@ -354,7 +354,7 @@ jobs:
           cat > /opt/gh-aw/safeoutputs/tools.json << 'GH_AW_SAFE_OUTPUTS_TOOLS_EOF'
           [
             {
-              "description": "Create a new GitHub pull request to propose code changes. Use this after making file edits to submit them for review and merging. The PR will be created from the current branch with your committed changes. For code review comments on an existing PR, use create_pull_request_review_comment instead. CONSTRAINTS: Maximum 1 pull request(s) can be created.",
+              "description": "Create a new GitHub pull request to propose code changes. Use this after making file edits to submit them for review and merging. The PR will be created from the current branch with your committed changes. For code review comments on an existing PR, use create_pull_request_review_comment instead. CONSTRAINTS: Maximum 1 pull request(s) can be created. Title will be prefixed with \"[Continuous Improvement] \". Labels [continuous-improvement] will be automatically added. PRs will be created as drafts.",
               "inputSchema": {
                 "additionalProperties": false,
                 "properties": {
@@ -1116,7 +1116,7 @@ jobs:
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
         env:
           GH_AW_AGENT_OUTPUT: ${{ env.GH_AW_AGENT_OUTPUT }}
-          GH_AW_SAFE_OUTPUTS_HANDLER_CONFIG: "{\"create_pull_request\":{\"base_branch\":\"${{ github.base_ref || github.ref_name }}\",\"max\":1,\"max_patch_size\":1024},\"missing_data\":{},\"missing_tool\":{}}"
+          GH_AW_SAFE_OUTPUTS_HANDLER_CONFIG: "{\"create_pull_request\":{\"base_branch\":\"${{ github.base_ref || github.ref_name }}\",\"draft\":true,\"labels\":[\"continuous-improvement\"],\"max\":1,\"max_patch_size\":1024,\"title_prefix\":\"[Continuous Improvement] \"},\"missing_data\":{},\"missing_tool\":{}}"
         with:
           github-token: ${{ secrets.GH_AW_GITHUB_TOKEN || secrets.GITHUB_TOKEN }}
           script: |
