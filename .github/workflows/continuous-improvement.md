@@ -1,7 +1,7 @@
 ---
 description: Nightly workflow to continuously improve the repository with minimal changes - adding tests or refactoring code one function at a time
 on:
-  schedule: daily on weekdays
+  schedule: daily on weekdays  # Fuzzy schedule - compiler auto-scatters to avoid load spikes (e.g., 12 10 * * 1-5)
 permissions: read-all
 tools:
   github:
@@ -35,7 +35,7 @@ Improve the repository one small change at a time, with a focus on:
 ⚠️ **CRITICAL: Check for existing PRs first!**
 
 Before doing ANY work, check if there's already an open PR with "[Continuous Improvement]" in the title:
-1. Use the GitHub tools to search for open PRs: `is:pr is:open in:title "[Continuous Improvement]"`
+1. Use the GitHub tools to search for open PRs with the query: `is:pr is:open in:title "[Continuous Improvement]"` (without the outer backticks)
 2. If ANY open PR exists with this title, use the `noop` safe output and explain: "Skipping this cycle - found existing PR #{number} that needs to be merged first"
 3. Only proceed with improvements if NO matching PR exists
 
