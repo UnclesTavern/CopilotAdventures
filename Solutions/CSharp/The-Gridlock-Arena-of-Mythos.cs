@@ -32,6 +32,8 @@ enum Direction
     Right
 }
 
+record CreaturePosition(Creature Creature, Position NewPosition);
+
 class BattleSimulator
 {
     private const int GridSize = 5;
@@ -90,50 +92,11 @@ class BattleSimulator
                     var (dx, dy) = Directions[creature.Moves[move]];
                     position = position.MoveBy(dx, dy, GridSize);
                 }
-                return new { Creature = creature, NewPosition = position };
+                return new CreaturePosition(creature, position);
             }).ToList();
 
-            // Track creatures that will be defeated this round
-            var defeated = new HashSet<string>();
-
-            // Group creatures by position to handle multi-creature collisions
-            var positionGroups = newPositions.GroupBy(item => item.NewPosition).ToList();
-
-            // Process collisions for each position
-            foreach (var group in positionGroups)
-            {
-                var creaturesAtPosition = group.ToList();
-                if (creaturesAtPosition.Count > 1)
-                {
-                    // Multiple creatures at same position - battle!
-                    var position = creaturesAtPosition[0].NewPosition;
-                    grid[position.X, position.Y] = OverlapIcon; // Show battle
-                    
-                    // Find the strongest creature(s)
-                    var maxPower = creaturesAtPosition.Max(item => item.Creature.Power);
-                    var winners = creaturesAtPosition.Where(item => item.Creature.Power == maxPower).ToList();
-                    var losers = creaturesAtPosition.Where(item => item.Creature.Power < maxPower).ToList();
-                    
-                    if (winners.Count == 1)
-                    {
-                        // Single winner - gets points for all defeated creatures
-                        var winner = winners[0].Creature;
-                        foreach (var loser in losers)
-                        {
-                            scores[winner.Name] += loser.Creature.Power;
-                            defeated.Add(loser.Creature.Name);
-                        }
-                    }
-                    else
-                    {
-                        // Multiple creatures with same max power - all defeated
-                        foreach (var item in creaturesAtPosition)
-                        {
-                            defeated.Add(item.Creature.Name);
-                        }
-                    }
-                }
-            }
+            // Process collisions and track defeated creatures
+            var defeated = ProcessCollisions(newPositions, grid, scores);
 
             // Update positions for surviving creatures and remove defeated ones
             activeCreatures = activeCreatures.Where(creature =>
@@ -162,6 +125,48 @@ class BattleSimulator
         }
 
         return scores;
+    }
+
+    private static HashSet<string> ProcessCollisions(
+        List<CreaturePosition> newPositions,
+        string?[,] grid,
+        Dictionary<string, int> scores)
+    {
+        var defeated = new HashSet<string>();
+        var positionGroups = newPositions.GroupBy(item => item.NewPosition).ToList();
+
+        foreach (var group in positionGroups)
+        {
+            var creaturesAtPosition = group.ToList();
+            if (creaturesAtPosition.Count > 1)
+            {
+                var position = creaturesAtPosition[0].NewPosition;
+                grid[position.X, position.Y] = OverlapIcon;
+                
+                var maxPower = creaturesAtPosition.Max(item => item.Creature.Power);
+                var winners = creaturesAtPosition.Where(item => item.Creature.Power == maxPower).ToList();
+                var losers = creaturesAtPosition.Where(item => item.Creature.Power < maxPower).ToList();
+                
+                if (winners.Count == 1)
+                {
+                    var winner = winners[0].Creature;
+                    foreach (var loser in losers)
+                    {
+                        scores[winner.Name] += loser.Creature.Power;
+                        defeated.Add(loser.Creature.Name);
+                    }
+                }
+                else
+                {
+                    foreach (var item in creaturesAtPosition)
+                    {
+                        defeated.Add(item.Creature.Name);
+                    }
+                }
+            }
+        }
+
+        return defeated;
     }
 
     private static void RenderGrid(int move, string?[,] grid, Dictionary<string, int> scores, List<Creature> creatures)
