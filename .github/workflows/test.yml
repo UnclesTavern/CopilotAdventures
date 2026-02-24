@@ -4,6 +4,9 @@ name: Run Tests
 on:
   pull_request:
     branches: [ main ]
+    paths:
+      - 'Solutions/**'
+      - '.github/workflows/test.yml'
   push:
     branches: [ main ]
     paths:
@@ -51,7 +54,7 @@ jobs:
         with:
           dotnet-version: '9.0.x'
           cache: true
-          cache-dependency-path: Solutions/CSharp/CopilotAdventures.csproj
+          cache-dependency-path: 'Solutions/CSharp/**/*.csproj'
       
       - name: Restore dependencies
         run: dotnet restore
