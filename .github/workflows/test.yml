@@ -1,0 +1,31 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test-csharp:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Solutions/CSharp
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.x'
+          cache: true
+          cache-dependency-path: Solutions/CSharp/CopilotAdventures.csproj
+      
+      - name: Restore dependencies
+        run: dotnet restore
+      
+      - name: Run tests
+        run: dotnet test --verbosity minimal
