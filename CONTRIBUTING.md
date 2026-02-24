@@ -50,19 +50,19 @@ Our CI pipeline runs **three test jobs in parallel** for maximum efficiency:
 
 1. **JavaScript Tests** (`test-javascript`)
    - Runtime: Node.js 20.x
-   - Test Framework: Jest
+   - Test Framework: Custom test script
    - Target: Gridlock Arena of Mythos solution
    - Average Duration: ~15 seconds
 
 2. **C# Tests** (`test-csharp`)
    - Runtime: .NET 8.0
-   - Test Framework: xUnit
+   - Test Framework: Custom test runner
    - Target: Gridlock Arena of Mythos solution
    - Average Duration: ~20 seconds
 
 3. **Python Tests** (`test-python`)
    - Runtime: Python 3.12
-   - Test Framework: pytest
+   - Test Framework: Standalone test script
    - Target: Gridlock Arena of Mythos solution
    - Average Duration: ~10 seconds
 
@@ -96,9 +96,10 @@ npm test
 ```
 
 **What happens:**
-- Jest runs all test suites in `The-Gridlock-Arena-of-Mythos.test.js`
-- Tests validate battle mechanics, creature movements, and scoring
-- Coverage reports are generated automatically
+- Custom test script in `The-Gridlock-Arena-of-Mythos.test.js` runs comprehensive test suites
+- Tests validate battle mechanics, creature movements, scoring, and edge cases
+- Results are displayed with emoji indicators and detailed pass/fail messages
+- npm automatically handles dependencies during test execution
 
 ### C# Tests
 
@@ -106,26 +107,16 @@ npm test
 # Navigate to the C# solutions directory
 cd Solutions/CSharp
 
-# Restore dependencies (first time only)
-dotnet restore
-
-# Run all tests
-dotnet test
-
-# Or run with verbose output
-dotnet test --verbosity normal
+# Run tests using the custom test command (recommended)
+dotnet run mythos-test
 ```
 
 **What happens:**
-- xUnit test runner executes `GridlockArenaTests.cs`
+- Custom test runner executes comprehensive tests in `GridlockArenaTests.cs`
 - Tests verify creature battles, movement calculations, and game logic
-- Results show passed/failed tests with detailed output
+- Results show passed/failed tests with detailed output and emoji indicators
 
-**Alternative test execution:**
-```bash
-# Run tests using the custom test command
-dotnet run mythos-test
-```
+**Note:** The C# solution uses a custom test runner instead of xUnit. The `dotnet run mythos-test` command is the recommended way to run tests locally, matching the CI environment.
 
 ### Python Tests
 
@@ -144,9 +135,10 @@ pytest test_gridlock_arena.py --cov=gridlock_arena_module --cov-report=term-miss
 ```
 
 **What happens:**
-- pytest discovers and runs all test functions in `test_gridlock_arena.py`
-- Tests validate the Gridlock Arena module functionality
-- Detailed assertion messages help identify failures
+- Custom test script runs comprehensive tests for `gridlock_arena_module.py`
+- Tests validate the Gridlock Arena module functionality including battle mechanics, movement, and scoring
+- Results are displayed with emoji indicators for passed/failed tests
+- When using pytest, you get additional features like coverage reports and verbose output
 
 ## Interpreting Test Results
 

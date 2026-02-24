@@ -145,8 +145,8 @@ We'll review your submission and merge it into the repo if it meets the criteria
 All solutions in this repository are automatically tested via GitHub Actions CI. Before submitting your PR, ensure your code passes tests locally:
 
 - **JavaScript**: `cd Solutions/JavaScript/The-Gridlock-Arena-of-Mythos && npm test`
-- **C#**: `cd Solutions/CSharp && dotnet test`
-- **Python**: `cd Solutions/Python && pytest test_gridlock_arena.py`
+- **C#**: `cd Solutions/CSharp && dotnet run mythos-test`
+- **Python**: `cd Solutions/Python && python test_gridlock_arena.py`
 
 For more information about our testing infrastructure, see the [Testing Documentation](./CONTRIBUTING.md#automated-testing-infrastructure).
 
