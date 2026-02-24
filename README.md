@@ -2,6 +2,8 @@
     <img src="./Images/copilot-adventures.jpg" style="width: 830px;" />
 </a>
 
+[![Test Status](https://github.com/UnclesTavern/CopilotAdventures/actions/workflows/test.yml/badge.svg)](https://github.com/UnclesTavern/CopilotAdventures/actions/workflows/test.yml)
+
 Welcome to Copilot Adventures! This series of coding adventures is all about learning new concepts and languages by using [GitHub Copilot](https://github.com/features/copilot) to help you write code. Let's get started!
 
 ## Choose Your Own Copilot Adventure
@@ -127,11 +129,16 @@ Try creating a UI for your adventure. Use pure HTML/CSS/JavaScript or a library/
 
 Do you have a copilot adventure story/puzzle you'd like to submit for others to go through? We'd love to see it! Please submit a pull request to this repository with your adventure and solution. 
 
+**For detailed contribution guidelines, testing procedures, and PR requirements, see [CONTRIBUTING.md](CONTRIBUTING.md).**
+
+### Quick Contribution Checklist
+
 - Use `New Copilot Adventure: [Your Adventure Name]` for the PR title. Replace `[Your Adventure Name]` with the name of your adventure.
 - Include if your adventure is at the beginner, intermediate, or advanced level.
 - Follow the markdown template used with each adventure in the [Adventures](./Adventures) folder as you create your adventure.
 - Provide an image for your adventure (use [Microsoft Copilot Image Creator](https://www.bing.com/images/create) or another image generator solution). The image should "landscape" and be 1456x832 pixels.
 - Provide a solution using your chosen language. Place all of the code in a single file (to keep things simple), add it to the appropriate language folder in `Solutions`, and include it in the PR.
+- Run tests locally before submitting (see [CONTRIBUTING.md](CONTRIBUTING.md#running-tests-locally))
 
 We'll review your submission and merge it into the repo if it meets the criteria.
 
