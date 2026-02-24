@@ -69,15 +69,17 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    defaults:
+      run:
+        working-directory: Solutions/Python
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.x'
+          python-version: '3.11'
       
-      - name: Run Python tests
-        working-directory: Solutions/Python
+      - name: Run tests
         run: python test_gridlock_arena.py
