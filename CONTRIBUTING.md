@@ -192,11 +192,11 @@ error CS0103: The name 'X' does not exist in the current context
 ```
 **Solution:** Check your using statements and namespace declarations
 
-**Issue:** Test discovery failed
+**Issue:** Tests not running
 ```
-No test is available
+No tests executed
 ```
-**Solution:** Ensure your test methods have the `[Fact]` or `[Theory]` attribute
+**Solution:** Ensure you're using the correct command: `dotnet run mythos-test` instead of `dotnet test`. The project uses a custom test runner.
 
 #### Python
 
