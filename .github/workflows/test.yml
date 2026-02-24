@@ -1,0 +1,82 @@
+name: Run Tests
+
+# Run tests on pull requests and main branch pushes to ensure code quality
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+    paths:
+      - 'Solutions/**'
+      - '.github/workflows/test.yml'
+
+# Prevent concurrent test runs for the same PR
+concurrency:
+  group: test-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Test JavaScript solutions
+  test-javascript:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Solutions/JavaScript/The-Gridlock-Arena-of-Mythos
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Run tests
+        run: npm test
+
+  # Test C# solutions
+  test-csharp:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Solutions/CSharp
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+          cache: true
+          cache-dependency-path: Solutions/CSharp/CopilotAdventures.csproj
+      
+      - name: Restore dependencies
+        run: dotnet restore
+      
+      - name: Build
+        run: dotnet build --no-restore --configuration Release
+      
+      - name: Run tests
+        run: dotnet run --no-build --configuration Release mythos-test
+
+  # Test Python solutions
+  test-python:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Solutions/Python
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      
+      - name: Run tests
+        run: python test_gridlock_arena.py
