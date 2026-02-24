@@ -35,6 +35,7 @@ jobs:
         with:
           node-version: '20'
       
+      # Note: No dependencies needed - tests run directly via node
       - name: Run tests
         run: npm test
 
@@ -62,6 +63,7 @@ jobs:
       - name: Build
         run: dotnet build --no-restore --configuration Release
       
+      # Note: Tests use custom runner 'mythos-test' via Program.cs, not standard dotnet test
       - name: Run tests
         run: dotnet run --no-build --configuration Release mythos-test
 
@@ -81,5 +83,6 @@ jobs:
         with:
           python-version: '3.12'
       
+      # Note: Tests are self-contained and don't require pytest or other dependencies
       - name: Run tests
         run: python test_gridlock_arena.py
