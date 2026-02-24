@@ -1,0 +1,60 @@
+name: Test
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+    paths:
+      - 'Solutions/**'
+      - '.github/workflows/test.yml'
+
+concurrency:
+  group: test-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test-javascript:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      
+      - name: Run JavaScript tests
+        working-directory: Solutions/JavaScript/The-Gridlock-Arena-of-Mythos
+        run: npm test
+
+  test-csharp:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      
+      - name: Run C# tests
+        working-directory: Solutions/CSharp
+        run: dotnet run mythos-test
+
+  test-python:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      
+      - name: Run Python tests
+        working-directory: Solutions/Python
+        run: python test_gridlock_arena.py
