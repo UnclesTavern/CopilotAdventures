@@ -4,6 +4,9 @@
 
 Welcome to Copilot Adventures! This series of coding adventures is all about learning new concepts and languages by using [GitHub Copilot](https://github.com/features/copilot) to help you write code. Let's get started!
 
+[![Run Tests](https://github.com/UnclesTavern/CopilotAdventures/actions/workflows/test.yml/badge.svg)](https://github.com/UnclesTavern/CopilotAdventures/actions/workflows/test.yml)
+[![Contributions Welcome](https://img.shields.io/badge/contributions-welcome-brightgreen.svg)](./CONTRIBUTING.md)
+
 ## Choose Your Own Copilot Adventure
 
 <a href="#">
@@ -134,6 +137,18 @@ Do you have a copilot adventure story/puzzle you'd like to submit for others to 
 - Provide a solution using your chosen language. Place all of the code in a single file (to keep things simple), add it to the appropriate language folder in `Solutions`, and include it in the PR.
 
 We'll review your submission and merge it into the repo if it meets the criteria.
+
+**For detailed contribution guidelines, testing procedures, and code style requirements, please see [CONTRIBUTING.md](./CONTRIBUTING.md).**
+
+## Testing Your Solutions
+
+All solutions in this repository are automatically tested via GitHub Actions CI. Before submitting your PR, ensure your code passes tests locally:
+
+- **JavaScript**: `cd Solutions/JavaScript/The-Gridlock-Arena-of-Mythos && npm test`
+- **C#**: `cd Solutions/CSharp && dotnet test`
+- **Python**: `cd Solutions/Python && pytest test_gridlock_arena.py`
+
+For more information about our testing infrastructure, see the [Testing Documentation](./CONTRIBUTING.md#automated-testing-infrastructure).
 
 ## Getting Help
 
