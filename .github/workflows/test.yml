@@ -42,18 +42,25 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    defaults:
+      run:
+        working-directory: Solutions/CSharp
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
       
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: '8.0.x'
+          dotnet-version: '9.x'
+          cache: true
+          cache-dependency-path: Solutions/CSharp/CopilotAdventures.csproj
       
-      - name: Run C# tests
-        working-directory: Solutions/CSharp
-        run: dotnet run mythos-test
+      - name: Restore dependencies
+        run: dotnet restore
+      
+      - name: Run tests
+        run: dotnet test --verbosity minimal
 
   test-python:
     runs-on: ubuntu-latest
