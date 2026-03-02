@@ -25,13 +25,14 @@
 #
 # Source: githubnext/agentics/workflows/ci-coach.md@b0e9cfd3a20372ce7fe0462bb7bbca2272df4a88
 #
-# gh-aw-metadata: {"schema_version":"v1","frontmatter_hash":"4e61d251e2b4ff001f0cae69fcb9f23cbe8b8c2694c8e649b316f663972aa26a","compiler_version":"v0.50.0"}
+# gh-aw-metadata: {"schema_version":"v1","frontmatter_hash":"79f4b4c5b308526f67372ab940ebe9c104f97dc6ac1b669293eeef6b050ad387","compiler_version":"v0.50.0"}
 
 name: "CI Optimization Coach"
 "on":
   schedule:
   - cron: "15 7 * * *"
     # Friendly format: daily (scattered)
+  # skip-if-match: is:issue is:open in:title "[ci-coach]" # Skip-if-match processed as search check in pre-activation job
   workflow_dispatch:
 
 permissions: {}
@@ -43,6 +44,8 @@ run-name: "CI Optimization Coach"
 
 jobs:
   activation:
+    needs: pre_activation
+    if: needs.pre_activation.outputs.activated == 'true'
     runs-on: ubuntu-slim
     permissions:
       contents: read
@@ -171,6 +174,7 @@ jobs:
           GH_AW_GITHUB_RUN_ID: ${{ github.run_id }}
           GH_AW_GITHUB_RUN_NUMBER: ${{ github.run_number }}
           GH_AW_GITHUB_WORKSPACE: ${{ github.workspace }}
+          GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_ACTIVATED: ${{ needs.pre_activation.outputs.activated }}
         with:
           script: |
             const { setupGlobals } = require('/opt/gh-aw/actions/setup_globals.cjs');
@@ -190,7 +194,8 @@ jobs:
                 GH_AW_GITHUB_REPOSITORY: process.env.GH_AW_GITHUB_REPOSITORY,
                 GH_AW_GITHUB_RUN_ID: process.env.GH_AW_GITHUB_RUN_ID,
                 GH_AW_GITHUB_RUN_NUMBER: process.env.GH_AW_GITHUB_RUN_NUMBER,
-                GH_AW_GITHUB_WORKSPACE: process.env.GH_AW_GITHUB_WORKSPACE
+                GH_AW_GITHUB_WORKSPACE: process.env.GH_AW_GITHUB_WORKSPACE,
+                GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_ACTIVATED: process.env.GH_AW_NEEDS_PRE_ACTIVATION_OUTPUTS_ACTIVATED
               }
             });
       - name: Validate prompt placeholders
@@ -1044,6 +1049,42 @@ jobs:
           name: threat-detection.log
           path: /tmp/gh-aw/threat-detection/detection.log
           if-no-files-found: ignore
+
+  pre_activation:
+    runs-on: ubuntu-slim
+    outputs:
+      activated: ${{ (steps.check_membership.outputs.is_team_member == 'true') && (steps.check_skip_if_match.outputs.skip_check_ok == 'true') }}
+      matched_command: ''
+    steps:
+      - name: Setup Scripts
+        uses: github/gh-aw/actions/setup@8624e99d3979177875f082b4959b14da951d9ffe # v0.50.0
+        with:
+          destination: /opt/gh-aw/actions
+      - name: Check team membership for workflow
+        id: check_membership
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        env:
+          GH_AW_REQUIRED_ROLES: admin,maintainer,write
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { setupGlobals } = require('/opt/gh-aw/actions/setup_globals.cjs');
+            setupGlobals(core, github, context, exec, io);
+            const { main } = require('/opt/gh-aw/actions/check_membership.cjs');
+            await main();
+      - name: Check skip-if-match query
+        id: check_skip_if_match
+        uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8
+        env:
+          GH_AW_SKIP_QUERY: "is:issue is:open in:title \"[ci-coach]\""
+          GH_AW_WORKFLOW_NAME: "CI Optimization Coach"
+          GH_AW_SKIP_MAX_MATCHES: "1"
+        with:
+          script: |
+            const { setupGlobals } = require('/opt/gh-aw/actions/setup_globals.cjs');
+            setupGlobals(core, github, context, exec, io);
+            const { main } = require('/opt/gh-aw/actions/check_skip_if_match.cjs');
+            await main();
 
   safe_outputs:
     needs:

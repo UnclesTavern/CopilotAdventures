@@ -5,15 +5,16 @@ on:
   schedule:
     - cron: daily
   workflow_dispatch:
+  skip-if-match: 'is:issue is:open in:title "[ci-coach]"'
 
 network:
   allowed:
-  - defaults
-  - dotnet
-  - node
-  - python
-  - rust
-  - java
+    - defaults
+    - dotnet
+    - node
+    - python
+    - rust
+    - java
 
 permissions: read-all
 
@@ -134,13 +135,14 @@ If no significant improvements are found:
 ### Common High-Value Optimizations
 
 1. **Parallel Job Execution**
+
    ```yaml
    # Before: Sequential
    test:
      needs: [build]
    lint:
      needs: [build]
-   
+
    # After: Parallel
    test:
      needs: [build]
@@ -149,10 +151,11 @@ If no significant improvements are found:
    ```
 
 2. **Matrix Balancing**
+
    ```yaml
    # Balance test distribution across matrix jobs
    matrix:
-     group: [1, 2, 3, 4]  # Evenly distributed
+     group: [1, 2, 3, 4] # Evenly distributed
    ```
 
 3. **Path Filtering**
@@ -160,18 +163,20 @@ If no significant improvements are found:
    on:
      push:
        paths:
-         - 'src/**'
-         - 'tests/**'
+         - "src/**"
+         - "tests/**"
    ```
 
 ### Anti-Patterns to Avoid
 
 ❌ **NEVER modify test code to hide failures**
+
 - Don't add `|| true` to failing tests
 - Don't suppress error output
 - Don't skip failing tests without justification
 
 ❌ **Don't over-optimize**
+
 - Avoid changes that save <2% of runtime
 - Don't sacrifice clarity for minor gains
 - Don't add complexity without clear benefit
@@ -180,7 +185,7 @@ If no significant improvements are found:
 
 When creating a PR, use this structure:
 
-````markdown
+```markdown
 ### Summary
 
 [Brief description of optimization and expected benefit]
@@ -194,6 +199,7 @@ When creating a PR, use this structure:
 **Risk**: Low/Medium/High
 
 **Changes**:
+
 - [Description of specific changes made]
 
 **Rationale**: [Why this improves efficiency]
@@ -217,7 +223,7 @@ When creating a PR, use this structure:
 - [ ] Test on a feature branch first
 - [ ] Monitor first few runs after merge
 - [ ] Compare runtime before/after
-````
+```
 
 ## Quality Standards
 
