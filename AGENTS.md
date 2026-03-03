@@ -26,10 +26,12 @@ CopilotAdventures/
 - **Ask Mode** (`Adventures/Ask/`): Step-by-step collaborative learning challenges
 - **Difficulty Levels**: `1-Beginner/`, `2-Intermediate/`, `3-Advanced/`
 - **Parallel Variants**: Each adventure has both `-Agent.md` and `-Ask.md` versions
+- **Warmup Adventures**: `Warmup-Adventure-Agent.md` and `Warmup-Adventure-Ask.md` live at the root of each mode folder (no difficulty prefix)
+- **Localization**: Ask mode adventures include Italian translations in `it-IT/` subdirectories (e.g., `Adventures/Ask/1-Beginner/it-IT/`)
 
 ### Solutions Architecture
 **C# Centralized Pattern**: Single `Program.cs` with switch-case adventure selector
-**JavaScript/Python Standalone Pattern**: Individual executable files per adventure
+**JavaScript/Python Standalone Pattern**: Individual executable files per adventure; complex adventures (e.g., Gridlock Arena, Knowledge Cartographer) use a dedicated subdirectory with their own `package.json`
 
 ## Coding Conventions
 
@@ -78,16 +80,29 @@ CopilotAdventures/
 
 ### Testing Commands
 ```bash
-# C# Solutions
+# C# Solutions — run automated test suite
 cd Solutions/CSharp
-dotnet build
+dotnet restore
+dotnet test --verbosity minimal
+
+# C# Solutions — run individual adventure
+cd Solutions/CSharp
 dotnet run [adventure-name]
 
-# JavaScript Solutions  
+# JavaScript Solutions — run automated test suite (Gridlock Arena)
+cd Solutions/JavaScript/The-Gridlock-Arena-of-Mythos
+npm ci
+npm test
+
+# JavaScript Solutions — run standalone adventure
 cd Solutions/JavaScript
 node The-[Adventure-Name].js
 
-# Python Solutions
+# Python Solutions — run automated test suite
+cd Solutions/Python
+python test_gridlock_arena.py
+
+# Python Solutions — run individual adventure
 cd Solutions/Python
 python The-[Adventure-Name].py
 ```
