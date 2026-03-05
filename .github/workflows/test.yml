@@ -83,3 +83,29 @@ jobs:
       
       - name: Run tests
         run: python test_gridlock_arena.py
+
+  test-ruby:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: Solutions/Ruby
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+      
+      - name: Run Ruby solutions
+        run: |
+          ruby The-Clockwork-Town-of-Tempora.rb
+          ruby The-Magical-Forest-of-Algora.rb
+          ruby The-Scrolls-Of-Eldoria.rb
+          ruby The-Legendary-Duel-of-Stonevale.rb
+          ruby The-Celestial-Alignment-of-Lumoria.rb
+          ruby The-Chamber-Of-Echoes.rb
+          ruby The-Gridlock-Arena-of-Mythos.rb
